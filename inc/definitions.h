@@ -32,6 +32,7 @@ typedef struct {
 typedef struct {
     SDL_Window* window;
     SDL_Renderer* renderer;
+    SDL_Surface* surface; 
     bool quit;
 } State;
 
@@ -41,14 +42,8 @@ typedef struct {
     Vec2F plane;
 } Player;
 
-typedef struct {
-    uint8_t r, g, b, a;
-} ColorRGBA;
-
-extern ColorRGBA RGBA_Red;
-extern ColorRGBA RGBA_Green;
-extern ColorRGBA RGBA_Blue;
-
 int xy2index(int x, int y, int w);
+
+void set_pixel(State *state, int x, int y, Uint32 color);
 
 #endif // DEFINITIONS_H

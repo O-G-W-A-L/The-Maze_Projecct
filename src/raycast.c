@@ -1,16 +1,20 @@
-#include "definitions.h"
-#include "raycast.h"
+#include "../inc/definitions.h"
+#include "../inc/raycast.h"
+#include "../inc/textures.h"
+#include <SDL2/SDL.h>
+#include <math.h>
+#include <stdio.h>
 
 void render(State *state, Player* player) {
     for (int x = 0; x < SCREEN_WIDTH; ++x) {
-        float cameraX = 2 * x / (float)SCREEN_WIDTH - 1; 
+        float cameraX = 2 * x / (float)SCREEN_WIDTH - 1;
         Vec2F rayDir = {
             .x = player->dir.x + player->plane.x * cameraX,
             .y = player->dir.y + player->plane.y * cameraX,
         };
 
         Vec2I mapBox = {
-            .x = (int)player->pos.x, 
+            .x = (int)player->pos.x,
             .y = (int)player->pos.y
         };
 
@@ -22,8 +26,8 @@ void render(State *state, Player* player) {
         float perpWallDist;
         Vec2I stepDir = {};
 
-        bool hit = false; 
-        Side side; 
+        bool hit = false;
+        Side side;
 
         if (rayDir.x < 0) {
             stepDir.x = -1;
@@ -65,29 +69,52 @@ void render(State *state, Player* player) {
                 break;
         }
 
-        int lineHeight = (int)(SCREEN_HEIGHT / perpWallDist);
+        int lineHeight = (int)(SCREEN_HEIGHT / perpWallDist * 1.5);
 
         int drawStart = -lineHeight / 2 + SCREEN_HEIGHT / 2;
         if (drawStart < 0) drawStart = 0;
-        int drawEnd = lineHeight / 2 + SCREEN_HEIGHT / 2; 
+        int drawEnd = lineHeight / 2 + SCREEN_HEIGHT / 2;
         if (drawEnd >= SCREEN_HEIGHT) drawEnd = SCREEN_HEIGHT - 1;
 
-        ColorRGBA color;
-        switch (MAP[xy2index(mapBox.x, mapBox.y, MAP_SIZE)]) {
-            case 1: color = RGBA_Red; break;
-            case 2: color = RGBA_Green; break;
-            case 3: color = RGBA_Blue; break;
-            default: color = (ColorRGBA){.r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0xFF}; break;
+        int textureIndex = MAP[xy2index(mapBox.x, mapBox.y, MAP_SIZE)] - 1;
+        if (textureIndex >= NUM_TEXTURES) {
+            textureIndex = 0;
         }
 
-        if (side == NorthSouth) {
-            color.r /= 2;
-            color.g /= 2;
-            color.b /= 2;
+        double wallX;
+        if (side == EastWest) {
+            wallX = player->pos.y + perpWallDist * rayDir.y;
+        } else {
+            wallX = player->pos.x + perpWallDist * rayDir.x;
+        }
+        wallX -= floor(wallX);
+
+        int texX = (int)(wallX * (double)TEXTURE_WIDTH);
+        if ((side == EastWest && rayDir.x > 0) || (side == NorthSouth && rayDir.y < 0)) {
+            texX = TEXTURE_WIDTH - texX - 1;
         }
 
-        SDL_SetRenderDrawColor(state->renderer, color.r, color.g, color.b, color.a);
-        SDL_RenderDrawLine(state->renderer, x, drawStart, x, drawEnd);
+        // Sky rendering
+        SDL_SetRenderDrawColor(state->renderer, 135, 206, 235, 255);
+        for (int y = 0; y < drawStart; y++) {
+            SDL_RenderDrawPoint(state->renderer, x, y);
+        }
+
+        // Wall rendering
+        for (int y = drawStart; y < drawEnd; y++) {
+            int d = y * 256 - SCREEN_HEIGHT * 128 + lineHeight * 128;
+            int texY = ((d * TEXTURE_HEIGHT) / lineHeight) / 256;
+            SDL_Rect srcRect = { texX, texY, 1, 1 };
+            SDL_Rect dstRect = { x, y, 1, 1 };
+            SDL_RenderCopy(state->renderer, textures[textureIndex], &srcRect, &dstRect);
+        }
+
+        // Floor casting with gray color
+        SDL_SetRenderDrawColor(state->renderer, 139, 69, 19, 255); 
+        for (int y = drawEnd + 1; y < SCREEN_HEIGHT; y++) {
+            SDL_RenderDrawPoint(state->renderer, x, y);
+        }
     }
-}
 
+    SDL_RenderPresent(state->renderer);
+}

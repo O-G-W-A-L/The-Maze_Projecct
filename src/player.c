@@ -1,6 +1,6 @@
-#include "definitions.h"
-#include "player.h"
-#include "raycast.h"
+#include "../inc/definitions.h"
+#include "../inc/player.h"
+#include "../inc/raycast.h"
 
 void handle_player_movement(Player* player, const uint8_t* keystate, float moveSpeed) {
     if (keystate[SDL_SCANCODE_W]) {
@@ -51,4 +51,3 @@ void rotate_player(Player* player, float angle, float rotateSpeed) {
     player->plane.x = player->plane.x * cosf(angle * rotateSpeed) - player->plane.y * sinf(angle * rotateSpeed);
     player->plane.y = oldPlaneX * sinf(angle * rotateSpeed) + player->plane.y * cosf(angle * rotateSpeed);
 }
-

@@ -1,8 +1,11 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <stdbool.h>
-#include "definitions.h"
-#include "render.h"
-#include "player.h"
+#include "../inc/definitions.h"
+#include "../inc/render.h"
+#include "../inc/player.h"
+#include "../inc/raycast.h"  
+#include "../inc/textures.h"
 
 int main(void) {
     ASSERT(!SDL_Init(SDL_INIT_VIDEO), "SDL failed to initialize; %s\n", SDL_GetError());
@@ -24,6 +27,18 @@ int main(void) {
     state.renderer = SDL_CreateRenderer(state.window, -1, SDL_RENDERER_PRESENTVSYNC);
     ASSERT(state.renderer, "Failed to create SDL renderer: %s\n", SDL_GetError());
 
+    // Initialize SDL_image
+    if (!(IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) & (IMG_INIT_PNG | IMG_INIT_JPG))) {
+        fprintf(stderr, "IMG_Init Error: %s\n", IMG_GetError());
+        SDL_DestroyRenderer(state.renderer);
+        SDL_DestroyWindow(state.window);
+        SDL_Quit();
+        return 1;
+    }
+
+    // Load textures
+    load_textures(state.renderer);
+
     SDL_SetHint(SDL_HINT_MOUSE_RELATIVE_MODE_WARP, "1");
     SDL_SetRelativeMouseMode(true);
 
@@ -33,8 +48,8 @@ int main(void) {
         .plane = {.x = 0.0f, .y = 0.66f},
     };
 
-    const float rotateSpeed = 0.025;
-    const float moveSpeed = 0.05;
+    const float rotateSpeed = 0.2;
+    const float moveSpeed = 0.1;
 
     while (!state.quit) {
         SDL_Event event;
@@ -67,9 +82,19 @@ int main(void) {
         SDL_RenderPresent(state.renderer);
     }
 
+    // Cleanup textures
+    for (int i = 0; i < NUM_TEXTURES; i++) {
+        if (textures[i]) {
+            SDL_DestroyTexture(textures[i]);
+        }
+    }
+
     SDL_DestroyRenderer(state.renderer);
     SDL_DestroyWindow(state.window);
+
+    // Quit SDL_image
+    IMG_Quit();
+
     SDL_Quit();
     return 0;
 }
-
