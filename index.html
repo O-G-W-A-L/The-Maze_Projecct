@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Maze</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <h1 class="logo">THE MAZE</h1>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+    <img src="./image/btn.png" alt="Menu Button" class="menu-btn">
+  </nav>
+  <header id="home">
+    <div class="header-content">
+      <h2>Race against time, Your own time, your own race</h2>
+      <div class="line"></div>
+      <h1>The Maze</h1>
+      <a href="https://github.com/O-G-W-A-L/the-maze_project" class="ctn">Checkout</a>
+    </div>
+  </header>
+  <!-- Features -->
+  <section id="features">
+    <div class="title">
+      <h1>Features</h1>
+      <div class="line"></div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <img src="./image/time.jpg" alt="Feature 1">
+        <h4>Walls and Time</h4>
+        <p>Challenge yourself in a battle of wits and skill vs a maze in time. Lose yourself in exotic worlds where YOUR time is what to beat</p>
+      </div>
+      <div class="col">
+        <img src="./image/key.jpg" alt="Feature 2">
+        <h4>Intuitive Controls</h4>
+        <p>Easy to use controls to navigate through the maze, Quick player action and controls</p>
+      </div>
+      <div class="col">
+        <img src="./image/texture.png" alt="Feature 3">
+        <h4>Mind Blowing Textures</h4>
+        <p>A collection of unique and real life textures to enhance the maze feel</p>
+      </div>
+    </div>
+  </section>
+  <!-- About -->
+  <section id="about" class="footer">
+    <div class="title">
+      <h1>About</h1>
+      <div class="line"></div>
+    </div>
+    <p>In the heart of my coding journey, I stood at a crossroads. Websites and apps had been my companions, but the siren song of game design beckoned—a maze of pixels and possibilities and purpose. A time in my life that i felt someone should play what i desgined. 
+      Week one was a harsh. Raycasting, that mathematical storm, swept me off my feet. I grappled with vectors, angles, and pixel shaders. Frustration brewed like a storm, yet I clung to the mast of curiosity.
+      Then came week two—a sunburst after rain. My foot pressed the pedal, and the maze unfolded. Walls rose, corridors snaked, and the minotaur of doubt prowled. But I danced with algorithms, each step a revelation, a triumph over initial chaos. This portfolio project for Holberton School allowed me to combine my passion for mazes with my skills in game development.</p>
+    <p>Developer: Ogwal Jonathan Amos</p>
+    <p>Connect with me:</p>
+    <div class="social-links">
+      <a href="https://www.linkedin.com/in/jonathan-amos-ogwal-725926285" target="_blank">LinkedIn</a>
+      <a href="https://github.com/O-G-W-A-L" target="_blank">GitHub</a>
+      <a href="https://x.com/@Ogwal_Jonathan" target="_blank">X</a>
+    </div>
+    <p>Check out the project repository: <a href="https://github.com/O-G-W-A-L/the-maze_project" target="_blank">GitHub Repository</a></p>
+  </section>
+  <footer>
+    <p>Made by Ogwal Jonathan Amos. © 2024 The Maze Landing Page. All rights reserved.</p>
+  </footer>
+  <script>
+    const menuBtn = document.querySelector('.menu-btn');
+    const navLinks = document.querySelector('.nav-links');
+
+    menuBtn.addEventListener('click', () => {
+      navLinks.classList.toggle('mobile-menu');
+    });
+  </script>
+</body>
+</html>
